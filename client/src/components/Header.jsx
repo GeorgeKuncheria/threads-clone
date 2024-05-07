@@ -13,7 +13,6 @@ const Header = () => {
         w={6}
         src={colorMode === 'dark' ? '/light-logo.svg' : '/dark-logo.svg'}
         onClick={toggleColorMode}
-
         />
     </Flex>
   )

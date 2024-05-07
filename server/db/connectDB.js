@@ -19,14 +19,6 @@ const connectDB =async () =>{
     }
 }
 
-// const connectDB = async (app) =>{
-//     app.use(cors());
-//     app.use(express.json());
-//     app.use(express.urlencoded({extended:true}));
-//     app.use(cookieParser());
-//     const conn=await mongoose.connect(process.env.MONGO_DB);
-//     console.log(`MongoDB Connected : ${conn.connection.host}`);
-// }
 
 
 export default connectDB;
