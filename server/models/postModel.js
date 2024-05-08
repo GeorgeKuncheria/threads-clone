@@ -13,9 +13,9 @@ const postSchema= mongoose.Schema({
     img:{
         type:String
     },
-    likes:{
-        type:Number,
-        default:0
+    likes: {
+        type: [mongoose.Schema.Types.ObjectId], // Array of ObjectIds
+        default: [], // Default value should be an empty array
     },
     replies:[
         {
