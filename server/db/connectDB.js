@@ -3,10 +3,6 @@ import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 
-//
-// const conn= await mongoose.connect(process.env.MONGO_DB,{
-//     useUnifiedTopology:true
-// });
 
 const connectDB =async () =>{
     try{
