@@ -9,7 +9,7 @@ export const getUserProfile = async (req,res) => {
     try{
         const user= await User.findOne({username}).select("-password").select("-updatedAt").exec();
         if (!user){
-            return res.status(400).json({message: "User not found!!"});
+            return res.status(400).json({error: "User not found!!"});
         }
 
         res.status(200).json(user);
@@ -17,7 +17,7 @@ export const getUserProfile = async (req,res) => {
     }
 
     catch(error){
-        res.status(500).json({message:error.message});
+        res.status(500).json({error:error.message});
         console.log(`Error in getUser: ${error.message}`);
         }
 }
@@ -30,7 +30,7 @@ export const signupUser= async (req,res)=>{
         const user= await User.findOne({$or:[{email},{username}]}).exec();
 
         if (user){
-            return res.status(400).json({message:"User already exists!!"});
+            return res.status(400).json({error:"User already exists!!"});
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -58,13 +58,13 @@ export const signupUser= async (req,res)=>{
         }
 
         else{
-            res.status(400).json({message:"Invalid User Data"})
+            res.status(400).json({error:"Invalid User Data"})
         }
 
     }
-    catch(err){
-        res.status(500).json({message:err.message});
-        console.log("Error in signUser:",err.message);
+    catch(error){
+        res.status(500).json({error:error.message});
+        console.log("Error in signUser:",error.message);
     }
 }
 
@@ -78,7 +78,7 @@ export const loginUser = async (req,res) => {
 
         if (!user || !isPasswordCorrect)
         {
-            return res.status(401).json({message:"Invalid  username or password"});
+            return res.status(401).json({error:"Invalid  username or password"});
         }
 
         generateTokenAndSetCookie(user._id,res);
@@ -93,7 +93,7 @@ export const loginUser = async (req,res) => {
 
     }
     catch(error){
-        res.status(500).json({message:error.message});
+        res.status(500).json({error:error.message});
         console.log("Error in loginUser:",error.message);
     }
 }
@@ -106,7 +106,7 @@ export const logoutUser = async (req,res) => {
         res.status(200).json({message:"User Logged out successfully!!"}); 
         }
     catch(error){
-        res.status(500).json({message:error.message})
+        res.status(500).json({error:error.message})
         console.log(`Error in logoutUser: ${error.message}`)
     }
 }
@@ -119,11 +119,11 @@ export const followUnFollowUser= async (req,res) => {
         const currentUser = await User.findById(req.user._id).exec();
 
         if (id === req.user._id.toString()){
-            return res.status(400).json({message:"User cannot follow themselves"});
+            return res.status(400).json({error:"User cannot follow themselves"});
         }
 
         if (!userToModify || !currentUser) {
-            return res.status(404).json({message:"User not found"});
+            return res.status(404).json({error:"User not found"});
         }
 
 
@@ -147,7 +147,7 @@ export const followUnFollowUser= async (req,res) => {
 
     }
     catch(error){
-        res.status(500).json({message:error.message});
+        res.status(500).json({error:error.message});
         console.log(`Error in followUnFollowUser: ${error.message}`);
     }
 }
@@ -160,12 +160,12 @@ export const updateUser = async (req, res) => {
     try{
         let user = await User.findById(userId);
         if (!user){
-            return res.status(404).json({message:"User not found"});
+            return res.status(404).json({error:"User not found"});
         }
 
 
         if (req.params.id !== userId.toString()){
-            return res.status(404).json({message:"Cannot update other user's profile" });
+            return res.status(404).json({error:"Cannot update other user's profile" });
         }
 
 
@@ -188,7 +188,7 @@ export const updateUser = async (req, res) => {
         res.status(200).json({message:"Profile Updated successfully",user});
     }
     catch(error){
-        res.status(500).json({message:error.message});
+        res.status(500).json({error:error.message});
         console.log(`Error in updateUser: ${error.message}`);
     }
 }
