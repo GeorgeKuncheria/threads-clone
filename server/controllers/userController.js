@@ -53,7 +53,9 @@ export const signupUser= async (req,res)=>{
                 _id:newUser._id,
                 name:newUser.name,
                 username:newUser.username,
-                email:newUser.email
+                email:newUser.email,
+                bio:newUser.bio,
+                profilePic:newUser.profilePic
             })
         }
 
@@ -84,11 +86,12 @@ export const loginUser = async (req,res) => {
         generateTokenAndSetCookie(user._id,res);
 
         res.status(200).json({
-            message:"Successfully logged in",
             _id:user._id,
             name:user.name,
             username:user.username,
-            email:user.email
+            email:user.email,
+            bio:user.bio,
+            profilePic:user.profilePic
         });
 
     }

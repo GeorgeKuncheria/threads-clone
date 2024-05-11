@@ -6,7 +6,6 @@ import authScreenAtom from '../atoms/authAtom';
 
 const Auth = () => {
   const authScreenState= useRecoilValue(authScreenAtom);
-  console.log(authScreenState);
     return (
 
 

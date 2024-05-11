@@ -37,22 +37,34 @@ import {
     });
 
     const handleLogin=  async () =>{
-      console.log(JSON.stringify(inputs))
-      // try 
-      // {
-      //   const res= await fetch ("/api/users/login",{
-      //     method:"POST",
-      //     headers:{
-      //       "Content-Type": "application/json"
-      //     },
-      //     body:JSON.stringify(inputs)
-      //   })
 
-      // }
+      try 
+      {
+        const res= await fetch ("/api/users/login",{
+          method:"POST",
+          headers:{
+            "Content-Type": "application/json"
+          },
+          body:JSON.stringify(inputs)
+        });
 
-      // catch(error){
-      //   console.log(error);
-      // }
+        const data= await res.json();
+        if (data.error){
+          showToast("Error",data.error,'error');
+        }
+
+        else{
+          showToast("Success","Succesfully Logged in!!",'success');
+          localStorage.setItem("user-threads",JSON.stringify(data));
+          setUser(data);
+        }
+
+      }
+
+      catch(error){
+        showToast("Internal Error","Not connected to the server",'error');
+        console.log(error);
+      }
 
     }
 
