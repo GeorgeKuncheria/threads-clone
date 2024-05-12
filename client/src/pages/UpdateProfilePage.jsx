@@ -14,6 +14,8 @@ import {
   import {useState,useRef} from 'react';
   import {useRecoilState} from 'recoil';
   import userAtom from './../atoms/userAtom.js';
+  import useShowToast from './../hooks/useShowToast.js';
+  import usePreviewImg from '../hooks/usePreviewImg.js';
 
   
   const UpdateProfilePage = () => {
@@ -28,8 +30,37 @@ import {
         profilePic:user.profilePic
     });
 
+    const showToast = useShowToast();
     const fileRef = useRef(null);
+    const {handleImageChange, imgUrl}= usePreviewImg();
+
+
+    const handleSubmit= async(e)=>{
+        e.preventDefault();
+        try{
+            const res= await fetch(`/api/users/update/${user._id}`,{
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({...inputs,profilePic:imgUrl})
+            })
+            const data= await res.json();
+            if (data.error){
+                showToast("Error",data.error,'error');
+                return 
+            }
+            showToast("Success","Updated succesfully....",'success');
+            setUser(data);
+            localStorage.setItem('user-threads',JSON.stringify(data));
+        }
+        catch(error){
+            showToast("Error",`${error}`,'error');
+        }
+    
+    }
         return (
+        <form onSubmit={handleSubmit}>
         <Flex align={'center'} justify={'center'} my={6}>
         <Stack
           spacing={4}
@@ -46,15 +77,15 @@ import {
           <FormControl id="userName">
             <Stack direction={['column', 'row']} spacing={6}>
               <Center>
-                <Avatar size="xl" boxShadow={"md"} src={inputs.profilePic}/>
+                <Avatar size="xl" boxShadow={"md"} src={imgUrl || inputs.profilePic}/>
               </Center>
               <Center w="full">
                 <Button w="full" onClick={()=>{fileRef.current.click()}}>Change Avatar</Button>
-                <Input type='file' hidden ref={fileRef}/>
+                <Input type='file' hidden ref={fileRef} onChange={handleImageChange}/>
               </Center>
             </Stack>
           </FormControl>
-          <FormControl  isRequired>
+          <FormControl  >
             <FormLabel>Full Name</FormLabel>
             <Input
               placeholder="John Doe"
@@ -64,7 +95,7 @@ import {
               onChange={(e)=> {setInputs({...inputs, name:e.target.value})}}
             />
           </FormControl>
-          <FormControl  isRequired>
+          <FormControl  >
             <FormLabel>Username</FormLabel>
             <Input
               placeholder="JohnDoe"
@@ -74,7 +105,7 @@ import {
               onChange={(e)=> {setInputs({...inputs, username:e.target.value})}}
             />
           </FormControl>
-          <FormControl  isRequired>
+          <FormControl  >
             <FormLabel>Email address</FormLabel>
             <Input
               placeholder="your-email@example.com"
@@ -84,7 +115,7 @@ import {
               onChange={(e)=> {setInputs({...inputs, email:e.target.value})}}
             />
           </FormControl>
-          <FormControl  isRequired>
+          <FormControl  >
             <FormLabel>Bio</FormLabel>
             <Input
               placeholder="BIO"
@@ -94,7 +125,7 @@ import {
               onChange={(e)=> {setInputs({...inputs, bio:e.target.value})}}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl >
             <FormLabel>Password</FormLabel>
             <Input
               placeholder="password"
@@ -120,12 +151,14 @@ import {
               w="full"
               _hover={{
                 bg: 'green.500',
-              }}>
+              }}
+              type="submit">
               Submit
             </Button>
           </Stack>
         </Stack>
       </Flex>
+      </form>
     );
   }
   
