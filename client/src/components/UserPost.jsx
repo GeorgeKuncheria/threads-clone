@@ -30,7 +30,7 @@ const UserPost = ({likes,replies,postImg,postTitle}) => {
                     src='https://bit.ly/dan-abramov'
                     position={"absolute"}
                     top={"0px"}
-                    left="15px"
+                    left="20px"   //was 15
                     padding={"2px"}
                     />
 
@@ -40,7 +40,7 @@ const UserPost = ({likes,replies,postImg,postTitle}) => {
                     src='https://bit.ly/sage-adebayo'
                     position={"absolute"}
                     bottom={"0px"}
-                    right="-5px"
+                    right="-10px" //was 5
                     padding={"2px"}
                     />
 
@@ -50,7 +50,7 @@ const UserPost = ({likes,replies,postImg,postTitle}) => {
                     src='https://bit.ly/prosper-baba'
                     position={"absolute"}
                     bottom={"0px"}
-                    left="4px"
+                    left="10px"  // was 4
                     padding={"2px"}
                     />
                 </Box>

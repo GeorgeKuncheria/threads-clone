@@ -95,7 +95,7 @@ const CreatePost = () => {
 				onClick={onOpen}
 				size={{ base: "sm", sm: "md" }}
 			>
-				<AddIcon />
+				<AddIcon />&nbsp;&nbsp;Post 
 			</Button>
 
 			<Modal isOpen={isOpen} onClose={onClose}>

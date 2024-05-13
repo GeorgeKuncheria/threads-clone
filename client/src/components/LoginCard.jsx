@@ -30,6 +30,7 @@ import {
     const setAuthScreen=useSetRecoilState(authScreenAtom);
     const setUser=useSetRecoilState(userAtom);
     const showToast=useShowToast();
+    const [loading,setLoading] = useState(false);
 
     const [inputs,setInputs]= useState({
       username:'',
@@ -37,6 +38,7 @@ import {
     });
 
     const handleLogin=  async () =>{
+      setLoading(true);
 
       try 
       {
@@ -64,6 +66,9 @@ import {
       catch(error){
         showToast("Internal Error","Not connected to the server",'error');
         console.log(error);
+      }
+      finally{
+        setLoading(false);
       }
 
     }
@@ -117,14 +122,15 @@ import {
               </FormControl>
               <Stack spacing={10} pt={2}>
                 <Button
-                  loadingText="Submitting"
+                  loadingText="Logging In..."
                   size="lg"
                   bg={useColorModeValue("gray.600","gray.700")}
                   color={'white'}
                   _hover={{
                     bg: useColorModeValue("gray.700","gray.800"),
                   }}
-                  onClick={handleLogin}>
+                  onClick={handleLogin}
+                  isLoading={loading}>
                   Log In
                 </Button>
               </Stack>
