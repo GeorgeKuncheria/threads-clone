@@ -52,25 +52,11 @@ import {
             })
             const data= await res.json();
             if (data.error){
-                // toast({
-                //     title:"Error",
-                //     description: data.error,
-                //     status:"error",
-                //     duration:3000,
-                //     isClosable:true
-                //  })
                 showToast("Error",data.error,"error");
                 return
             }
 
             else{
-                // toast({
-                //     title:"Success",
-                //     description: "Successfully signed up",
-                //     status:"success",
-                //     duration:3000,
-                //     isClosable:true
-                //  })
                 showToast("Success","Successfully signed up","success");
                 localStorage.setItem("user-threads",JSON.stringify(data));
                 setUser(data);

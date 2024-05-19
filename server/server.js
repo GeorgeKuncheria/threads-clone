@@ -4,6 +4,7 @@ import connectDB from './db/connectDB.js';
 import cookieParser from 'cookie-parser';
 import {v2 as cloudinary} from  'cloudinary';
 import initialize from './app.js';
+import {app,server,io} from './socket/socket.js';
 
 
 
@@ -11,7 +12,7 @@ import initialize from './app.js';
 
 dotenv.config();
 
-const app=express();
+
 connectDB();
 
 const port=process.env.PORT;
@@ -26,5 +27,5 @@ cloudinary.config({
 initialize(app);
 
 
-app.listen(port,()=>{console.log(`App is listening on ${port}`)});
+server.listen(port,()=>{console.log(`App is listening on ${port}`)});
 

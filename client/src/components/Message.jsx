@@ -1,7 +1,14 @@
 
-import {Avatar, Text , Flex} from '@chakra-ui/react';
+import {Avatar, Text , Flex,Box} from '@chakra-ui/react';
+import {selectedConversationsAtom} from './../atoms/messagesAtom.js';
+import {useRecoilValue} from 'recoil';
+import userAtom from './../atoms/userAtom.js';
+import { BsCheck2All } from "react-icons/bs";
 
-const Message = ({ownMessage}) => {
+
+const Message = ({ownMessage,message}) => {
+    const selectedConversation=useRecoilValue(selectedConversationsAtom);
+    const user= useRecoilValue(userAtom);
   return (
     <>
         {
@@ -12,21 +19,27 @@ const Message = ({ownMessage}) => {
                     gap={2}
                     alignSelf={"flex-end"}
                     >
-                        <Text maxW={"350px"} bg={"blue.400"} p={1}
-                            borderRadius={"md"}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel tortor id ligula efficitur fringilla. Nulla egestas, 
-                                turpis non vulputate malesuada, sapien felis lobortis est, sit amet tincidunt nisl elit sed neque. 
-                            </Text>
-                            <Avatar src="" w="7" h={7}/>
+                        <Flex bg={"green.800"} maxW={"350px"} p={1} borderRadius={"md"}>
+							<Text color={"white"}>{message.text}</Text>
+							<Box
+								alignSelf={"flex-end"}
+								ml={1}
+								color={message.seen ? "blue.400" : ""}
+								fontWeight={"bold"}
+							>
+								<BsCheck2All size={16} />
+							</Box>
+						</Flex>
+                            <Avatar src={user.profilePic} w="7" h={7}/>
                     </Flex>
             ) 
             : 
             (
 
                 <Flex gap={2}>
-                        <Avatar src="" w="7" h={7}/>
+                        <Avatar src={selectedConversation.userProfilePic} w="7" h={7}/>
                         <Text maxW={"350px"} bg={"gray.400"} p={1} color="black" borderRadius={"md"}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                {message.text} 
                             </Text>
 
                     </Flex>
