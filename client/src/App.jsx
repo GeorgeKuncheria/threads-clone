@@ -1,6 +1,6 @@
 import {Button} from '@chakra-ui/react';
 import {Container,Box} from '@chakra-ui/react';
-import {Route,Routes,Navigate} from 'react-router-dom';
+import {Route,Routes,Navigate,useLocation} from 'react-router-dom';
 
 import Auth from './pages/Auth';
 import UserPage from './pages/UserPage';
@@ -18,13 +18,15 @@ import {useRecoilValue} from 'recoil';
 import userAtom from './atoms/userAtom';
 
 
+
 function App() {
 
   const user= useRecoilValue(userAtom);
+  const {pathname}=useLocation();
 
   return (
     <Box position={"relative"} w="full ">
-    <Container maxW='620px'>
+    <Container maxW={pathname==='/' ? {base:"620px",md:"900px"} : "620px"}>
     <Header/>
     <Routes>
       <Route path="/" element={user ? <HomePage/> : <Navigate to= '/auth'/>}/>

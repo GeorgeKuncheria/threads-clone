@@ -23,11 +23,14 @@ import usePreviewImg from "../hooks/usePreviewImg";
 
 
 const MessageInput = ({setMessages}) => {
-  const [messageText, setMessageText] = useState("");
-  const showToast = useShowToast();
+ 	const [messageText, setMessageText] = useState("");
+ 	const showToast = useShowToast();
 	const selectedConversation = useRecoilValue(selectedConversationsAtom);
 	const setConversations = useSetRecoilState(conversationsAtom);
-  const [isSending, setIsSending] = useState(false);
+	const imageRef = useRef(null);
+  	const [isSending, setIsSending] = useState(false);
+	const { onClose } = useDisclosure();
+	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
 
 	const handleSendMessage = async (e) => {
 		e.preventDefault();
@@ -45,6 +48,7 @@ const MessageInput = ({setMessages}) => {
 				body: JSON.stringify({
 					message: messageText,
 					recipientId: selectedConversation.userId,
+					img: imgUrl,
 				}),
 			});
 			const data = await res.json();
@@ -52,7 +56,7 @@ const MessageInput = ({setMessages}) => {
 				showToast("Error", data.error, "error");
 				return;
 			}
-			console.log(data);
+			// console.log(data);
 			setMessages((messages) => [...messages, data]);
 
 			setConversations((prevConvs) => {
@@ -71,6 +75,7 @@ const MessageInput = ({setMessages}) => {
 				return updatedConversations;
 			});
 			setMessageText("");
+			setImgUrl("");
 		} catch (error) {
 			showToast("Error", error.message, "error");
 		} finally {
@@ -78,19 +83,50 @@ const MessageInput = ({setMessages}) => {
 		}
 	};
   return (
-    <form onSubmit={handleSendMessage}>
-        <InputGroup>
-					<Input
-						w={"full"}
-						placeholder='Type a message'
-						onChange={(e) => setMessageText(e.target.value)}
-						value={messageText}
-					/>
-					<InputRightElement onClick={handleSendMessage} cursor={"pointer"}>
-						<IoSendSharp />
-					</InputRightElement>
-				</InputGroup>
-    </form>
+		<Flex gap={2} alignItems={"center"}>
+		<form onSubmit={handleSendMessage} style={{ flex: 95 }}>
+			<InputGroup>
+				<Input
+					w={"full"}
+					placeholder='Type a message'
+					onChange={(e) => setMessageText(e.target.value)}
+					value={messageText}
+				/>
+				<InputRightElement onClick={handleSendMessage} cursor={"pointer"}>
+					<IoSendSharp />
+				</InputRightElement>
+			</InputGroup>
+		</form>
+		<Flex flex={5} cursor={"pointer"}>
+			<BsFillImageFill size={20} onClick={() => imageRef.current.click()} />
+			<Input type={"file"} hidden ref={imageRef} onChange={handleImageChange} />
+		</Flex>
+		<Modal
+			isOpen={imgUrl}
+			onClose={() => {
+				onClose();
+				setImgUrl("");
+			}}
+		>
+			<ModalOverlay />
+			<ModalContent>
+				<ModalHeader></ModalHeader>
+				<ModalCloseButton />
+				<ModalBody>
+					<Flex mt={5} w={"full"}>
+						<Image src={imgUrl} />
+					</Flex>
+					<Flex justifyContent={"flex-end"} my={2}>
+						{!isSending ? (
+							<IoSendSharp size={24} cursor={"pointer"} onClick={handleSendMessage} />
+						) : (
+							<Spinner size={"md"} />
+						)}
+					</Flex>
+				</ModalBody>
+			</ModalContent>
+		</Modal>
+	</Flex>
   )
 }
 

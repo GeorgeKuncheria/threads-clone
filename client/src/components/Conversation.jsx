@@ -2,7 +2,7 @@ import React from 'react';
 import {Flex,useColorModeValue,WrapItem,Avatar,AvatarBadge,Stack,Image,Text,useColorMode,Box} from '@chakra-ui/react';
 import userAtom from './../atoms/userAtom.js';
 import {useRecoilValue,useRecoilState} from 'recoil';
-import {BsCheck2All} from 'react-icons/bs';
+import {BsCheck2All,BsFillImageFill} from 'react-icons/bs';
 import {selectedConversationsAtom} from './../atoms/messagesAtom.js'
 
 
@@ -60,7 +60,7 @@ const Conversation = ({conversation,isOnline}) => {
                             <BsCheck2All size={16 }/>
                         </Box>
                     ) : ""}
-                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0,18) + "..." : lastMessage.text}
+                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0,18) + "..." : lastMessage.text || <BsFillImageFill size={14}/>}
                 </Text>
 
         </Stack>

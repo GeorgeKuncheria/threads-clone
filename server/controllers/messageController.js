@@ -1,58 +1,62 @@
 import Message from './../models/messageModel.js';
 import Conversation from './../models/conversationModel.js';
 import { getRecipientSocketId ,io } from '../socket/socket.js';
+import { v2 as cloudinary } from "cloudinary";
+
 
 
 const sendMessage = async (req,res)=>{
-    try{
-        const {recipientId,message}=req.body;
-        const senderId = req.user._id;
+	try {
+		const { recipientId, message } = req.body;
+		let { img } = req.body;
+		const senderId = req.user._id;
 
-        let conversation =await  Conversation.findOne({
-            participants:{$all:[ senderId,recipientId]}
-        }).exec();
+		let conversation = await Conversation.findOne({
+			participants: { $all: [senderId, recipientId] },
+		});
 
-        if (!conversation){
-            conversation= new Conversation({
-                participants:[senderId,recipientId],
-                lastMessage:{
-                    text:message,
-                    sender:senderId,
-                }
-            })
+		if (!conversation) {
+			conversation = new Conversation({
+				participants: [senderId, recipientId],
+				lastMessage: {
+					text: message,
+					sender: senderId,
+				},
+			});
+			await conversation.save();
+		}
 
-            await  conversation.save();
-        }
-        
+		if (img) {
+			const uploadedResponse = await cloudinary.uploader.upload(img);
+			img = uploadedResponse.secure_url;
+		}
 
-        const newMessage= new Message({
-            conversationId:conversation._id,
-            sender:senderId,
-            text:message,
-        });
+		const newMessage = new Message({
+			conversationId: conversation._id,
+			sender: senderId,
+			text: message,
+			img: img || "",
+		});
 
-        await Promise.all([
-            newMessage.save(),
-            conversation.updateOne({
-                lastMessage: {
-                    text:message,
-                    sender:senderId,
-                }
-            })
-        ]);
+		await Promise.all([
+			newMessage.save(),
+			conversation.updateOne({
+				lastMessage: {
+					text: message,
+					sender: senderId,
+				},
+			}),
+		]);
 
-        const recipientSocketId = getRecipientSocketId(recipientId);
+		const recipientSocketId = getRecipientSocketId(recipientId);
 		if (recipientSocketId) {
 			io.to(recipientSocketId).emit("newMessage", newMessage);
-		};
+		}
 
-        res.status(200).json(newMessage);
-
-    }
-
-    catch(error){
-        res.status(500).json({error:error.message});
-    }
+		res.status(201).json(newMessage);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
 }
 
 const getMessage = async (req, res) =>{

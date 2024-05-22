@@ -8,6 +8,7 @@ import useShowToast from './../hooks/useShowToast.js';
 import userAtom from './../atoms/userAtom.js';
 import { conversationsAtom } from './../atoms/messagesAtom.js';
 import { useSocket } from "./../socket/SocketContext.jsx";
+import messageSound from './../assets/sounds/iphone_message_tone.mp3';
 
 
 const MessageContainer = () => {
@@ -28,10 +29,10 @@ const MessageContainer = () => {
 			}
 
 			// // make a sound if the window is not focused
-			// if (!document.hasFocus()) {
-			// 	const sound = new Audio(messageSound);
-			// 	sound.play();
-			// }
+			if (!document.hasFocus()) {
+				const sound = new Audio(messageSound);
+				sound.play();
+			}
 
 			setConversations((prev) => {
 				const updatedConversations = prev.map((conversation) => {
