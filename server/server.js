@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import {v2 as cloudinary} from  'cloudinary';
 import initialize from './app.js';
 import {app,server,io} from './socket/socket.js';
+import job from './cron/cron.js';
 
 import path from 'path';
 
@@ -16,6 +17,7 @@ dotenv.config();
 
 
 connectDB();
+job.start();
 
 const port=process.env.PORT;
 const _dirname=path.resolve();
