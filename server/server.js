@@ -6,6 +6,8 @@ import {v2 as cloudinary} from  'cloudinary';
 import initialize from './app.js';
 import {app,server,io} from './socket/socket.js';
 
+import path from 'path';
+
 
 
 
@@ -16,6 +18,7 @@ dotenv.config();
 connectDB();
 
 const port=process.env.PORT;
+const _dirname=path.resolve();
 
 cloudinary.config({
     cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
@@ -25,6 +28,23 @@ cloudinary.config({
 
 
 initialize(app);
+
+//configuring backend and frontend in same URL;
+//http://localhost:3000 => backend server,frontend client  
+//http://localhost:5173 => frontend client 
+
+
+if (process.env.NODE_ENV==='production'){
+    app.use(express.static(path.join(_dirname,"/client/dist")))
+
+
+    //basically our react app
+    app.get("*",(req,res)=>{
+        res.sendFile(path.resolve(_dirname,"client","dist","index.html"))
+    })
+}
+
+
 
 
 server.listen(port,()=>{console.log(`App is listening on ${port}`)});
