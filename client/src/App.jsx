@@ -8,6 +8,7 @@ import PostPage from './pages/PostPage';
 import HomePage from './pages/HomePage';
 import UpdateProfilePage from './pages/UpdateProfilePage';
 import ChatPage from './pages/ChatPage.jsx';
+import SettingsPage from './pages/SettingsPage.jsx';
 
 
 import Header from './components/Header';
@@ -51,6 +52,8 @@ function App() {
 
       <Route path='/:username/post/:pid' element={<PostPage/>}/>
       <Route path='/chat' element={user ? <ChatPage/> : <Navigate to ={`/auth`}/>}/>
+      <Route path='/settings' element={user ? <SettingsPage/> : <Navigate to ={`/auth`}/>}/>
+
 
     </Routes> 
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { signupUser , loginUser, logoutUser, followUnFollowUser, updateUser , getUserProfile,getSuggestedUser} from '../controllers/userController.js';
+import { signupUser , loginUser, logoutUser, followUnFollowUser, updateUser , getUserProfile,getSuggestedUser,freezeAccount } from '../controllers/userController.js';
 import { protectRoute } from '../middleware/protectRoute.js';
 
 
@@ -14,6 +14,7 @@ router.post("/login",loginUser);
 router.post("/logout",logoutUser);
 router.post("/follow/:id",protectRoute,followUnFollowUser);
 router.put("/update/:id",protectRoute,updateUser);
+router.put("/freeze",protectRoute,freezeAccount);
 
 
 
